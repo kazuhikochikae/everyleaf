@@ -20,5 +20,9 @@
     <%= form.label :detail %>
     <%= form.text_field :detail %>
   </div>
+   <div class="blog_content">
+    <%= form.label :"終了期限" %>
+    <%= form.datetime_select :deadline %>
+  </div>
   <%= form.submit %>
 <% end %>
