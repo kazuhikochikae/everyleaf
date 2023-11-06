@@ -17,7 +17,20 @@ class TasksController < ApplicationController
     end
     @tasks = @tasks.page(params[:page]).per(10) 
 
+
+
+
+    if params[:name].present?
+      @tasks = @tasks.get_by_name params[:name]
+      end
+      if params[:status].present?
+      @tasks = @tasks.get_by_status params[:status]
+      end
+
+
   end
+
+
 
 
   def new
