@@ -4,7 +4,7 @@
 <div>
 <%= form_tag(tasks_path, method: "get") do %>
 <%= label_tag :name, "名前" %><%= text_field_tag :name, params[:name] %>
-<%= label_tag :status, "性別" %>
+<%= label_tag :status, "ステータス" %>
 <%= select_tag :status, options_for_select(["", "未着手", "着手中", "完了"], params[:status]) %>
 <%= submit_tag "検索" %>
 <% end %>
