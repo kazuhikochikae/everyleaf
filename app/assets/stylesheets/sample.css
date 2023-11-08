@@ -1,0 +1,51 @@
+body {
+  margin: 20px;
+}
+
+.container {
+  max-width: 100%;
+}
+
+th.name {
+  width: 100px;
+}
+
+th.detail {
+  width: 120px;
+}
+
+th.deadline {
+  width: 100px;
+}
+
+th.status {
+  width: 90px;
+}
+
+.center {
+  text-align: center;
+}
+
+.col-sm-12.col-lg-12 {
+  margin-bottom: 30px;
+}
+
+.link_task a {
+  background: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 3px;
+}
+
+p.link_task {
+  margin-top: 30px;
+}
+
+td.right_txt {
+  padding-right: 15px;
+}
+
+select#task_rank {
+  width: 300px;
+  margin-bottom: 20px;
+}

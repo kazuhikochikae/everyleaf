@@ -3,8 +3,27 @@ class TasksController < ApplicationController
 
   def index
     @tasks = Task.all
-    @tasks = Task.order(created_at: :desc)
+
+    if params[:sort_expired] == "true"
+      @tasks = Task.order(deadline: :asc)
+    elsif params[:sort_priority] == "true"
+      @tasks = Task.order(rank: :asc)
+    else
+      @tasks = Task.order(created_at: :desc)
+    end
+    
+    if params[:name].present?
+      @tasks = @tasks.get_by_name(params[:name])
+    end
+    if params[:status].present?
+      @tasks = @tasks.get_by_status params[:status]
+    end
+    
+    @tasks = @tasks.page(params[:page]).per(10)
   end
+
+
+
 
   def new
     @task = Task.new
@@ -41,7 +60,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :detail)
+    params.require(:task).permit(:name, :detail, :deadline, :status, :rank)
   end
 
   def set_task
