@@ -1,3 +1,35 @@
 <h1><%= @user.name %>のページ</h1>
 
 <p>メールアドレス: <%= @user.email %></p>
+
+<div class="container">
+      <div class="row">
+<div class="col-sm-12 col-lg-12">
+<table>
+  <tr>
+    <th class="name">名前</th>
+    <th class="detail">詳細</th>
+    <th class="deadline"><%= link_to "終了期限", tasks_path(sort_expired: "true") %></th>
+    <th class="status">ステータス</th>
+    <th class="rank"><%= link_to "優先度", tasks_path(sort_priority: "true") %></th>
+
+  </tr>
+
+<% @tasks.each do |task| %>
+  <tr>
+    <td><%= task.name %></td>
+    <td><%= task.detail %></td>
+    <td><%= task.deadline %></td>
+    <td class="center"><%= task.status %></td>
+    <td class="center"><%= task.rank_i18n %></td>
+
+    <td class="right_txt"><%= link_to '詳細', task_path(task.id) %></td>
+    <td class="right_txt"><%= link_to "編集", edit_task_path(task.id), data: { confirm: '本当に編集していいですか？' } %></td>
+    <td class="right_txt"><%= link_to '削除', task_path(task.id), method: :delete ,data: { confirm: '本当に削除していいですか？' } %></td>
+  </tr>
+<% end %>
+</table>
+
+</div>
+</div>
+</div>

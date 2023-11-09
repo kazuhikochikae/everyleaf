@@ -8,7 +8,9 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      redirect_to user_path(@user.id)
+      session[:user_id] = @user.id
+      flash[:notice] = '新規登録に成功しました'
+      redirect_to user_path(@user)
     else
       render :new
     end
@@ -16,6 +18,12 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @tasks = @user.tasks
+  
+
+    if current_user != @user
+       redirect_to tasks_path
+    end
   end
 
   private

@@ -13,4 +13,5 @@ class Task < ApplicationRecord
     where(status: status)
   }
 
+  belongs_to :user
 end
