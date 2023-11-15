@@ -12,15 +12,18 @@ class Admin::UsersController < ApplicationController
 
   def update
     if @user.update(user_params)
-      redirect_to admin_users_path, notice: "userを編集しました！"
+      redirect_to admin_users_path, notice: "userを編集しました"
     else
-      render :edit
+      redirect_to admin_users_path, notice: "管理者は一人必要です"
     end
   end
 
   def destroy
-    @user.destroy
-    redirect_to admin_users_path, notice: "userを削除しました！"  
+    if @user.destroy
+      redirect_to admin_users_path, notice: "userを削除しました"  
+    else
+      redirect_to admin_users_path, notice: "管理者は一人必要です"
+    end
   end
 
   def edit
@@ -38,7 +41,22 @@ class Admin::UsersController < ApplicationController
     redirect_to admin_users_path, notice: '管理者権限を削除しました。'
   end
 
+  def show
+    @user = User.find(params[:id])
+  end
 
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      session[:user_id] = @user.id
+      flash[:notice] = '新規登録に成功しました'
+      redirect_to admin_user_path(@user)
+    else
+      render :new
+    end
+  end
+
+  
 
   private
   def admin_user
