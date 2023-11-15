@@ -2,8 +2,13 @@ require 'rails_helper'
 RSpec.describe 'タスクモデル機能', type: :model do
   describe '検索機能' do
     # 必要に応じて、テストデータの内容を変更して構わない
-    let!(:task) { FactoryBot.create(:task, name: "task",status: "未着手") }
-    let!(:second_task) { FactoryBot.create(:second_task, name: "終わったタスク",status: "完了") }
+
+    let!(:user) { FactoryBot.create(:user, name: "山田") }
+
+    let!(:task) { FactoryBot.create(:task, name: "task", status: "未着手", user: user) }
+  
+
+    let!(:second_task) { FactoryBot.create(:second_task, name: "終わったタスク",status: "完了", user: user) }
     context 'scopeメソッドでタイトルのあいまい検索をした場合' do
       it "検索キーワードを含むタスクが絞り込まれる" do
         expect(Task.get_by_name('task')).to include(task)
@@ -13,10 +18,10 @@ RSpec.describe 'タスクモデル機能', type: :model do
     context 'scopeメソッドでステータス検索をした場合' do
       it "ステータスに完全一致するタスクが絞り込まれる" do
         # テストデータの作成
-        task1 = FactoryBot.create(:task, name: "タスク1", status: "未着手")
-        task2 = FactoryBot.create(:task, name: "タスク2", status: "着手中")
-        task3 = FactoryBot.create(:task, name: "タスク3", status: "完了")
-        task4 = FactoryBot.create(:task, name: "タスク4", status: "完了")
+        task1 = FactoryBot.create(:task, name: "タスク1", status: "未着手", user: user)
+        task2 = FactoryBot.create(:task, name: "タスク2", status: "着手中", user: user)
+        task3 = FactoryBot.create(:task, name: "タスク3", status: "完了", user: user)
+        task4 = FactoryBot.create(:task, name: "タスク4", status: "完了", user: user)
         # ステータスに完全一致するタスクを取得
         tasks_with_status_in_progress = Task.get_by_status("着手中")
     
@@ -31,9 +36,9 @@ RSpec.describe 'タスクモデル機能', type: :model do
       it "検索キーワードをタイトルに含み、かつステータスに完全一致するタスク絞り込まれる" do
         # ここに内容を記載する
         # テストデータの作成
-        task1 = FactoryBot.create(:task, name: "家事", status: "未着手")
-        task2 = FactoryBot.create(:task, name: "筋トレ", status: "着手中")
-        task3 = FactoryBot.create(:task, name: "筋トレ", status: "完了")
+        task1 = FactoryBot.create(:task, name: "家事", status: "未着手", user: user)
+        task2 = FactoryBot.create(:task, name: "筋トレ", status: "着手中", user: user)
+        task3 = FactoryBot.create(:task, name: "筋トレ", status: "完了", user: user)
 
         # タイトルとステータスに基づいてタスクを検索
         filtered_tasks = Task.get_by_name('家事').get_by_status("未着手")
@@ -47,6 +52,8 @@ RSpec.describe 'タスクモデル機能', type: :model do
 
 
   describe 'バリデーションのテスト' do
+    let!(:user) { FactoryBot.create(:user, name: "山田") }
+
     context 'タスクのタイトルが空の場合' do
       it 'バリデーションにひっかる' do
         task = Task.new(name: '', detail: '腹筋')
@@ -61,7 +68,7 @@ RSpec.describe 'タスクモデル機能', type: :model do
     end
     context 'タスクのタイトルと詳細とステータスに内容が記載されている場合' do
       it 'バリデーションが通る' do
-        task = Task.new(name: '運動', detail: '腹筋', status: '未着手')
+        task = user.tasks.build(name: '運動', detail: '腹筋', status: '未着手')
         expect(task).to be_valid
       end
     end

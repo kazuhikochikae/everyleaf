@@ -1,18 +1,6 @@
-<h1>タスク一覧</h1>
+<h1><%= @user.name %>のページ</h1>
 
-
-<div>
-<%= form_tag(tasks_path, method: "get") do %>
-<%= label_tag :name, "名前" %><%= text_field_tag :name, params[:name] %>
-<%= label_tag :status, "ステータス" %>
-<%= select_tag :status, options_for_select(["", "未着手", "着手中", "完了"], params[:status]) %>
-<%= submit_tag "検索" %>
-<% end %>
-</div>
-
-
-
-<p class="link_task"><%= link_to '新規登録', new_task_path %></p>
+<p>メールアドレス: <%= @user.email %></p>
 
 <div class="container">
       <div class="row">
@@ -45,7 +33,3 @@
 </div>
 </div>
 </div>
-
-
-<%= paginate @tasks %>
-

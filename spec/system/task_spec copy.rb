@@ -1,6 +1,75 @@
 require 'rails_helper'
 RSpec.describe 'タスク管理機能', type: :system do
 
+ 
+
+  describe '検索機能' do
+    before do
+      # 必要に応じて、テストデータの内容を変更して構わない
+      FactoryBot.create(:task, name: "task",status: "未着手", user: user)
+      FactoryBot.create(:second_task, name: "終わったタスク",status: "完了", user: user)
+    end
+
+    context 'ログインした場合' do
+      it 'ログインする' do
+        # トップページを開く
+        visit root_path
+        # ログインフォームにEmailとパスワードを入力する
+        fill_in 'Email', with: 'foo@example.com'
+        fill_in 'Password', with: '123456'
+        # ログインボタンをクリックする
+        click_on 'ログイン'
+        # ログインに成功したことを検証する
+        expect(page).to have_content 'ログインしました'
+      end
+    end
+
+
+    context 'タイトルであいまい検索をした場合' do
+      it "検索キーワードを含むタスクで絞り込まれる" do
+        visit tasks_path
+        # タスクの検索欄に検索ワードを入力する (例: task)
+        fill_in 'name', with: "task"
+        # 検索ボタンを押す
+        click_on '検索'
+        expect(page).to have_content 'task'
+      end
+    end
+    context 'ステータス検索をした場合' do
+      it "ステータスに完全一致するタスクが絞り込まれる" do
+        # ここに実装する
+        # プルダウンを選択する「select」について調べてみること
+
+        # タスクの一覧ページにアクセス
+        visit tasks_path
+        # プルダウンメニューからステータスを選択（例: "未着手"）
+        select "完了", from: "status"  # "status" は実際のセレクトボックスの名前に合わせて修正
+        # 検索ボタンをクリック
+        click_on '検索'
+        # 選択したステータスに完全一致するタスクが表示されることを確認
+        expect(page).to have_content '終わったタスク'
+        # その他のステータスに関するテストも同様に実施
+
+      end
+    end
+    context 'タイトルのあいまい検索とステータス検索をした場合' do
+      it "検索キーワードをタイトルに含み、かつステータスに完全一致するタスク絞り込まれる" do
+        # タスクの一覧ページにアクセス
+        visit tasks_path
+        # タイトルのあいまいな検索キーワードを入力（例: "task"）
+        fill_in 'name', with: "task"
+        # プルダウンメニューからステータスを選択（例: "未着手"）
+        select "未着手", from: "status"  # "status" は実際のセレクトボックスの名前に合わせて修正
+        # 検索ボタンをクリック
+        click_on '検索'
+        # タイトルに検索キーワードが含まれ、かつステータスに完全一致するタスクが表示されることを確認
+        expect(page).to have_content 'task'
+        expect(page).to have_content '未着手'
+        # その他の条件に関するテストも同様に実施
+      end
+    end
+  end
+
 
   
   describe '新規作成機能' do
@@ -15,6 +84,7 @@ RSpec.describe 'タスク管理機能', type: :system do
       # ここに「タスク詳細」というラベル名の入力欄に内容をfill_in（入力）する処理を書く
       fill_in 'task_name', with: '勉強'
       fill_in 'task_detail', with: 'rubyの教本'
+      select '未着手', from: 'task[status]'
       # 3. 「登録する」というvalue（表記文字）のあるボタンをクリックする
       # ここに「登録する」というvalue（表記文字）のあるボタンをclick_onする（クリックする）する処理を書く
       click_on '登録する'
