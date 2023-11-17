@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :labels do
-    name { "Label 1" }
+  factory :label do
+    title { "Label2" }
   end
 end
