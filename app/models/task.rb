@@ -13,5 +13,14 @@ class Task < ApplicationRecord
     where(status: status)
   }
 
+  scope :by_label_id, ->(label_id) {
+    joins(:labels).where(labels: { id: label_id })
+  }
+
+
+
   belongs_to :user
+
+  has_many :labellings, dependent: :destroy
+  has_many :labels, through: :labellings
 end
