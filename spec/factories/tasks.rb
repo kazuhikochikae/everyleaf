@@ -11,4 +11,7 @@ FactoryBot.define do
     detail { '腕立て' }
     status { '未着手' }
   end
+
+  
+  
 end

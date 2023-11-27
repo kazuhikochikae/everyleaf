@@ -2,16 +2,26 @@
 
 
 <div>
-<%= form_tag(tasks_path, method: "get") do %>
-<%= label_tag :name, "名前" %><%= text_field_tag :name, params[:name] %>
-<%= label_tag :status, "ステータス" %>
-<%= select_tag :status, options_for_select(["", "未着手", "着手中", "完了"], params[:status]) %>
-<%= submit_tag "検索" %>
+<%= form_tag(tasks_path, method: :get, local: true) do |form| %>
+
+  <%= label_tag :name, "名前" %><%= text_field_tag :name, params[:name] %>
+  <%= label_tag :status, "ステータス" %>
+  <%= select_tag :status, options_for_select(["", "未着手", "着手中", "完了"], params[:status]) %>
+  <%= submit_tag "検索" %>
 <% end %>
 </div>
 
+<%= form_tag(tasks_path, method: :get, local: true) do |form| %>
+  <div class="field">
+    <%= label_tag :label_id, "Label" %>
+    <%= collection_select :task, :label_id, Label.all, :id, :title, include_blank: true %>
+  </div>
+  <%= submit_tag "ラベル検索" %>
+<% end %>
 
 
+
+<div>
 <p class="link_task"><%= link_to '新規登録', new_task_path %></p>
 
 <div class="container">
@@ -24,6 +34,7 @@
     <th class="deadline"><%= link_to "終了期限", tasks_path(sort_expired: "true") %></th>
     <th class="status">ステータス</th>
     <th class="rank"><%= link_to "優先度", tasks_path(sort_priority: "true") %></th>
+    <th class="label">ラベル</th>
 
   </tr>
 
@@ -34,10 +45,16 @@
     <td><%= task.deadline %></td>
     <td class="center"><%= task.status %></td>
     <td class="center"><%= task.rank_i18n %></td>
+    <td class="center">
+      <% task.labels.each do |label| %>
+      <%= label.title %>
+    <% end %></td>
+
 
     <td class="right_txt"><%= link_to '詳細', task_path(task.id) %></td>
     <td class="right_txt"><%= link_to "編集", edit_task_path(task.id), data: { confirm: '本当に編集していいですか？' } %></td>
     <td class="right_txt"><%= link_to '削除', task_path(task.id), method: :delete ,data: { confirm: '本当に削除していいですか？' } %></td>
+    
   </tr>
 <% end %>
 </table>

@@ -5,7 +5,6 @@ class TasksController < ApplicationController
   def index
     @tasks = current_user.tasks
 
-
     if params[:sort_expired] == "true"
       @tasks = @tasks.order(deadline: :asc)
     elsif params[:sort_priority] == "true"
@@ -20,12 +19,15 @@ class TasksController < ApplicationController
     if params[:status].present?
       @tasks = @tasks.get_by_status params[:status]
     end
-    
+    if params[:task] && params[:task][:label_id].present?
+      label_id = params[:task][:label_id]
+      @tasks = Task.by_label_id(label_id)
+    end
     @tasks = @tasks.page(params[:page]).per(10)
   end
 
 
-
+  
 
   def new
     @task = Task.new
@@ -74,7 +76,7 @@ class TasksController < ApplicationController
   private
 
   def task_params
-    params.require(:task).permit(:name, :detail, :deadline, :status, :rank)
+  params.require(:task).permit(:name, :detail, :deadline, :status, :rank, label_ids: [])
   end
 
   def set_task
